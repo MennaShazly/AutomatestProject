@@ -1,11 +1,8 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.chromium.ChromiumDriver;
-import org.openqa.selenium.chromium.ChromiumOptions;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
@@ -27,7 +24,6 @@ public class TestClass {
     public void testTitle() {
         driver.get("https://duckduckgo.com/");
         assert driver.getTitle().equals("Google") : "Title is not as expected";
-        driver.quit();
     }
 
 
@@ -37,21 +33,57 @@ public class TestClass {
      * Navigate to [https://duckduckgo.com/]
      * Assert that the DuckDuckGo logo is displayed
      * Close Google Chrome
-    **/
+     **/
 
-     @Test
-    public void testLogo(){
+    @Test
+    public void testLogo() {
         driver.get("https://duckduckgo.com/");
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-//        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); //outdated formate
+//        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); //deprecated
 
-//        WebElement logo = driver.findElement(new By.ByClassName("header_headerLeft__rW6nD header_headerSection___XMRI"));
+//        WebElement logo = driver.findElement(new By.ByClassName("header_headerLeft__rW6nD header_headerSection___XMRI")); >> Not working
         WebElement logo = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/main/article/div[1]/div[1]/div[2]/div/header/div/section[1]/a/img"));
         boolean res = logo.isDisplayed();
 //        System.out.println("Logo is displayed: " + res);
         Assert.assertTrue(res);
 
+    }
+
+
+    /**
+     * Task 3:
+     * Open Google Chrome
+     * Navigate to [https://duckduckgo.com/]
+     * Search for [Selenium WebDriver]
+     * Assert that the link of the first result is [https://www.selenium.dev/documentation/webdriver/]
+     * Close Google Chrome
+     */
+    @Test
+    public void testSearch() {
+        driver.navigate().to("https://duckduckgo.com/");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+
+
+        WebElement searchBox = driver.findElement(By.id("searchbox_input"));
+        searchBox.sendKeys("Selenium WebDriver");
+        searchBox.submit();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+
+//        WebElement firstResult = driver.findElement(By.id("r1-0")); >> Clicks on another link in the first result
+        WebElement firstResult = driver.findElement(By.cssSelector("#r1-0 > div.OQ_6vPwNhCeusNiEDcGp > div > div > a"));
+
+        String firstResultLink = firstResult.getDomAttribute("href");
+//        firstResult.click();
+//        String firstResultLink = driver.getCurrentUrl();
+        Assert.assertEquals(firstResultLink, "https://www.selenium.dev/documentation/webdriver/");
+
+    }
+
+
+    @AfterTest
+    public void tearDown() {
         driver.quit();
     }
+
 }
