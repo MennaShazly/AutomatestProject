@@ -1,14 +1,18 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.Objects;
 
 public class TestClass {
     ChromeDriver driver = new ChromeDriver();
+    FirefoxDriver firefoxDriver = new FirefoxDriver();
+
 //    ChromeOptions options = new ChromeOptions();
 //    options.addArguments("start-maximized");
 
@@ -23,7 +27,8 @@ public class TestClass {
     @Test
     public void testTitle() {
         driver.get("https://duckduckgo.com/");
-        assert driver.getTitle().equals("Google") : "Title is not as expected";
+        assert Objects.equals(driver.getTitle(), "Google") : "Title is not as expected";
+//        assert driver.getTitle().equals("Google") : "Title is not as expected";
     }
 
 
@@ -81,9 +86,35 @@ public class TestClass {
     }
 
 
+    /** Task 4: Not done yet
+     * Open Mozilla Firefox
+     * Navigate to [https://duckduckgo.com/]
+     * Search for [TestNG]
+     * Assert that the text of the fourth result is [TestNG Tutorial]
+     * Close Mozilla Firefox
+     */
+    @Test
+    public void testFirefoxSearch(){
+        firefoxDriver.get("https://duckduckgo.com/");
+        firefoxDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+
+        WebElement searchBox = firefoxDriver.findElement(By.id("searchbox_input"));
+        searchBox.sendKeys("TestNG");
+        searchBox.submit();
+        firefoxDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+
+//        WebElement fourthResult = firefoxDriver.findElement(By.className("Rn_JXVtoPVAFyGkcaXyK VkOimy54PtIClAT3GMbr"));
+//        WebElement fourthResult = firefoxDriver.findElement(By.id("r1-3"));
+//        fourthResult.click();
+        WebElement fourthResult = firefoxDriver.findElement(By.xpath("//*[@id=\"r1-3\"]/div[3]/h2/a/span"));
+        String fourthResultText = fourthResult.getText();
+        Assert.assertEquals(fourthResultText, "TestNG Tutorial");
+    }
+
     @AfterTest
     public void tearDown() {
         driver.quit();
+        firefoxDriver.quit();
     }
 
 }
