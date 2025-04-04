@@ -43,7 +43,7 @@ public class TestClass {
     public void testLogo(){
         driver.get("https://duckduckgo.com/");
         driver.manage().window().maximize();
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 //        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); //outdated formate
 
 //        WebElement logo = driver.findElement(new By.ByClassName("header_headerLeft__rW6nD header_headerSection___XMRI"));
